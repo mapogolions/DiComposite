@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiComposite", "src\DiComposite.csproj", "{A5CE918C-7123-46E4-AF85-6A9F76F82AC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiComposite.Tests", "tests\DiComposite.Tests.csproj", "{FFB5334C-DF29-40F5-BF63-A851B701DC88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5CE918C-7123-46E4-AF85-6A9F76F82AC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5CE918C-7123-46E4-AF85-6A9F76F82AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5CE918C-7123-46E4-AF85-6A9F76F82AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5CE918C-7123-46E4-AF85-6A9F76F82AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB5334C-DF29-40F5-BF63-A851B701DC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB5334C-DF29-40F5-BF63-A851B701DC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB5334C-DF29-40F5-BF63-A851B701DC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB5334C-DF29-40F5-BF63-A851B701DC88}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
