@@ -4,5 +4,5 @@ namespace DiComposite.Internal;
 
 internal class ServiceDescriptorVisitorContext
 {
-    public IServiceCollection? Services { get; init; }
+    public IServiceCollection Services { get; init; } = default!;
 }
