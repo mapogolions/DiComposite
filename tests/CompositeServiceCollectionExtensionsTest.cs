@@ -117,7 +117,44 @@ public class CompositeServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void Test2()
+    public void ShouldRegisterICompositeAsTransientService()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddSingleton<ISound>(new A());
+        services.AddScoped<ISound, B>();
+        services.AddTransient<ISound>(_ => new C());
+        services.IComposite<ISound, CompositeSound>();
+
+        // Act
+        var descriptor = services.Single(x => x.ServiceType == typeof(IComposite<ISound>));
+
+        // Assert
+        Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
+        Assert.NotNull(descriptor.ImplementationFactory);
+    }
+
+    [Fact]
+    public void ICompositeShouldBeAbleToConsumeOtherServicesFromContainer()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddTransient<ISound, A>();
+        services.AddTransient<ISound, B>();
+        services.AddTransient<ISound>(sp => new C());
+        services.AddSingleton<IPronunciation, PronunciationWithPause>();
+        services.IComposite<ISound, CompositeSoundWithDep>();
+
+        // Act
+        using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
+        var composite = sp.GetRequiredService<IComposite<ISound>>();
+
+        // Assert
+        Assert.Equal(" A B C", composite.Value.Make());
+    }
+
+    [Fact]
+    public void GetService_ShouldBeAbleToResolveIComposite()
     {
         // Arrange
         var services = new ServiceCollection();
