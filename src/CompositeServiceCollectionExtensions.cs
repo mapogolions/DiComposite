@@ -24,6 +24,7 @@ public static class CompositeServiceCollectionExtensions
     }
 
     public static IServiceCollection IComposite<TService, TImplementation>(this IServiceCollection services)
+        where TImplementation : class, TService
     {
         if (services is null) throw new ArgumentNullException(nameof(services));
         var serviceType = typeof(IComposite<>).MakeGenericType(typeof(TService));
@@ -31,7 +32,7 @@ public static class CompositeServiceCollectionExtensions
         {
             var instances = sp.GetRequiredService<IEnumerable<TService>>();
             TImplementation instance = (TImplementation)Activator.CreateInstance(typeof(TImplementation), instances)!;
-            return (IComposite<TService>)Activator.CreateInstance(typeof(Composite<TService>), new object[] { instance })!;
+            return new Composite<TService>(instance);
         });
         return services;
     }
