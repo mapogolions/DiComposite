@@ -30,7 +30,7 @@ public static class CompositeServiceCollectionExtensions
         services.AddTransient(serviceType, sp =>
         {
             var instances = sp.GetRequiredService<IEnumerable<TService>>();
-            var instance = ActivatorUtilities.CreateInstance<TImplementation>(sp, instances)!;
+            TImplementation instance = (TImplementation)Activator.CreateInstance(typeof(TImplementation), instances)!;
             return (IComposite<TService>)Activator.CreateInstance(typeof(Composite<TService>), new object[] { instance })!;
         });
         return services;
@@ -52,7 +52,7 @@ public static class CompositeServiceCollectionExtensions
                 if (concreteType is null) throw new InvalidOperationException();
                 return (TService)sp.GetRequiredService(concreteType);
             }).ToArray();
-            return ActivatorUtilities.CreateInstance<TImplementation>(sp, instances)!;
+            return Activator.CreateInstance(typeof(TImplementation),instances)!;
         },
         lifetime);
     }
