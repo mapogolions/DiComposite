@@ -29,25 +29,6 @@ public class CompositeServiceCollectionExtensionsTests
     // }
 
     [Fact]
-    public void GetService_ShouldReturnComposite_WhenCalledOnRootScopeAndAllItemsHaveTransientLifetime()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-        services.AddTransient<ISound, A>();
-        services.AddTransient<ISound, B>();
-        services.AddTransient<ISound>(sp => new C());
-        services.Composite<ISound, CompositeSound>();
-
-        // Act
-        using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
-        var sound = sp.GetRequiredService<ISound>();
-
-        // Assert
-        Assert.Equal("ABC", sound.Make());
-        Assert.NotSame(sound, sp.GetRequiredService<ISound>());
-    }
-
-    [Fact]
     public void ShouldReturnCompositeWithTransientLifetime()
     {
         // Arrange
@@ -96,6 +77,44 @@ public class CompositeServiceCollectionExtensionsTests
         Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
     }
 
+    [Fact]
+    public void GetService_ShouldReturnComposite_WhenCalledOnRootScopeAndAllItemsHaveTransientLifetime()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddTransient<ISound, A>();
+        services.AddTransient<ISound, B>();
+        services.AddTransient<ISound>(sp => new C());
+        services.Composite<ISound, CompositeSound>();
+
+        // Act
+        using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
+        var sound = sp.GetRequiredService<ISound>();
+
+        // Assert
+        Assert.Equal("ABC", sound.Make());
+        Assert.NotSame(sound, sp.GetRequiredService<ISound>());
+    }
+
+    [Fact]
+    public void CompositeShouldBeAbleToConsumeOtherServicesFromContainer()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddTransient<ISound, A>();
+        services.AddTransient<ISound, B>();
+        services.AddTransient<ISound>(sp => new C());
+        services.AddSingleton<IPronounce, PronouceWithPause>();
+        services.Composite<ISound, CompositeSoundWithDep>();
+
+        // Act
+        using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
+        var sound = sp.GetRequiredService<ISound>();
+
+        // Assert
+        Assert.Equal(" A B C", sound.Make());
+    }
+
 
     // [Fact]
     // public void Test2()
@@ -127,10 +146,12 @@ internal class A : ISound
 {
     public string Make() => "A";
 }
+
 internal class B : ISound
 {
     public string Make() => "B";
 }
+
 internal class C : ISound
 {
     public string Make() => "C";
@@ -146,4 +167,31 @@ internal class CompositeSound : ISound
     }
 
     public string Make() => string.Join("", _sounds.Select(x => x.Make()));
+}
+
+internal interface IPronounce
+{
+    string Make(ISound sound);
+}
+
+internal class PronouceWithPause : IPronounce
+{
+    public string Make(ISound sound)
+    {
+        return $" {sound.Make()}";
+    }
+}
+
+internal class CompositeSoundWithDep : ISound
+{
+    private readonly IEnumerable<ISound> _sounds;
+    private readonly IPronounce _pronounce;
+
+    public CompositeSoundWithDep(IPronounce pronounce, params ISound[] sounds)
+    {
+        _pronounce = pronounce;
+        _sounds = sounds;
+    }
+
+    public string Make() => string.Join("", _sounds.Select(_pronounce.Make));
 }
