@@ -7,7 +7,7 @@ public static class CompositeServiceCollectionExtensions
 {
     private static readonly ServiceDescriptorVisitor _visitor = new();
 
-    public static IServiceCollection Composite<TService, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime)
+    public static IServiceCollection Composite<TService, TImplementation>(this IServiceCollection services)
         where TImplementation : class, TService
     {
         if (services is null) throw new ArgumentNullException(nameof(services));
@@ -18,13 +18,14 @@ public static class CompositeServiceCollectionExtensions
         }
         var context = new ServiceDescriptorVisitorContext { Services = services };
         descriptors.ForEach(x => _visitor.VisitDescriptor(x, context));
-        var composite = CompositeFactory<TService, TImplementation>(descriptors, lifetime);
+        var composite = CompositeFactory<TService, TImplementation>(descriptors);
         services.Add(composite);
         return services;
     }
 
-    private static ServiceDescriptor CompositeFactory<TService, TImplementation>(IReadOnlyList<ServiceDescriptor> descriptors, ServiceLifetime lifetime)
+    private static ServiceDescriptor CompositeFactory<TService, TImplementation>(IReadOnlyList<ServiceDescriptor> descriptors)
     {
+        var lifetime = descriptors.Max(x => x.Lifetime);
         return new  ServiceDescriptor(typeof(TService), sp =>
         {
             var instances = descriptors.Select(x =>

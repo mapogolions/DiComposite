@@ -16,7 +16,7 @@ public class CompositeServiceCollectionExtensionsTests
         services.AddSingleton<IGreeting>(new HelloGreeting());
         services.AddScoped<IGreeting, WelcomeGreeting>();
         services.AddTransient<IGreeting>(sp => new HowdyGreeting());
-        services.Composite<IGreeting, CompositeGreeting>(ServiceLifetime.Transient);
+        services.Composite<IGreeting, CompositeGreeting>();
 
         // Act
         using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = validateScopes, ValidateOnBuild = validateOnBuild });
