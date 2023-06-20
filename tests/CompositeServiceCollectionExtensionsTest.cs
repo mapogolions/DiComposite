@@ -42,7 +42,7 @@ public class CompositeServiceCollectionExtensionsTests
         using var sp = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
         using var scope = sp.CreateScope();
         var greetingComposite = scope.ServiceProvider.GetRequiredService<IComposite<IGreeting>>();
-        var actual = greetingComposite.Instance.Greet();
+        var actual = greetingComposite.Value.Greet();
 
         // Assert
         Assert.Equal("hello,welcome,howdy", actual);
