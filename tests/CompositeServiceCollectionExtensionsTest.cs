@@ -48,7 +48,7 @@ public class CompositeServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void ShouldReturnComposisteWithTransientLifetime()
+    public void ShouldReturnCompositeWithTransientLifetime()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -65,7 +65,7 @@ public class CompositeServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void ShouldReturnComposisteWithScopedLifetime()
+    public void ShouldReturnCompositeWithScopedLifetime()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -81,7 +81,7 @@ public class CompositeServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void ShouldReturnComposisteWithSingltonLifetime()
+    public void ShouldReturnCompositeWithSingletonLifetime()
     {
         // Arrange
         var services = new ServiceCollection();
