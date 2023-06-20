@@ -29,6 +29,7 @@ internal class ServiceDescriptorVisitor
     private void VisitInstance(ServiceDescriptor descriptor, ServiceDescriptorVisitorContext context)
     {
         Debug.Assert(descriptor.ImplementationInstance is not null);
+        context.Services.Remove(descriptor);
         var implementationType = descriptor.ImplementationInstance.GetType();
         context.Services.Add(new ServiceDescriptor(implementationType, descriptor.ImplementationInstance));
     }
@@ -36,6 +37,7 @@ internal class ServiceDescriptorVisitor
     private void VisitImplementationType(ServiceDescriptor descriptor, ServiceDescriptorVisitorContext context)
     {
         Debug.Assert(descriptor.ImplementationType is not null);
+        context.Services.Remove(descriptor);
         context.Services.Add(
             new ServiceDescriptor(descriptor.ImplementationType, descriptor.ImplementationType,descriptor.Lifetime));
     }
