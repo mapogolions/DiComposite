@@ -58,7 +58,7 @@ public class CompositeServiceCollectionExtensionsTests
         services.Composite<ISound, CompositeSound>();
 
         // Act
-        var descriptor = services.First(x => x.ServiceType == typeof(ISound));
+        var descriptor = services.Single(x => x.ServiceType == typeof(ISound));
 
         // Assert
         Assert.Equal(ServiceLifetime.Transient, descriptor.Lifetime);
@@ -74,7 +74,7 @@ public class CompositeServiceCollectionExtensionsTests
         services.Composite<ISound, CompositeSound>();
 
         // Act
-        var descriptor = services.First(x => x.ServiceType == typeof(ISound));
+        var descriptor = services.Single(x => x.ServiceType == typeof(ISound));
 
         // Assert
         Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
@@ -90,7 +90,7 @@ public class CompositeServiceCollectionExtensionsTests
         services.Composite<ISound, CompositeSound>();
 
         // Act
-        var descriptor = services.First(x => x.ServiceType == typeof(ISound));
+        var descriptor = services.Single(x => x.ServiceType == typeof(ISound));
 
         // Assert
         Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
