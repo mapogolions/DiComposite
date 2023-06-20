@@ -104,7 +104,7 @@ public class CompositeServiceCollectionExtensionsTests
         services.AddTransient<ISound, A>();
         services.AddTransient<ISound, B>();
         services.AddTransient<ISound>(sp => new C());
-        services.AddSingleton<IPronounce, PronouceWithPause>();
+        services.AddSingleton<IPronunciation, PronunciationWithPause>();
         services.Composite<ISound, CompositeSoundWithDep>();
 
         // Act
@@ -169,12 +169,12 @@ internal class CompositeSound : ISound
     public string Make() => string.Join("", _sounds.Select(x => x.Make()));
 }
 
-internal interface IPronounce
+internal interface IPronunciation
 {
     string Make(ISound sound);
 }
 
-internal class PronouceWithPause : IPronounce
+internal class PronunciationWithPause : IPronunciation
 {
     public string Make(ISound sound)
     {
@@ -185,13 +185,13 @@ internal class PronouceWithPause : IPronounce
 internal class CompositeSoundWithDep : ISound
 {
     private readonly IEnumerable<ISound> _sounds;
-    private readonly IPronounce _pronounce;
+    private readonly IPronunciation _pronunciation;
 
-    public CompositeSoundWithDep(IPronounce pronounce, params ISound[] sounds)
+    public CompositeSoundWithDep(IPronunciation pronunciation, params ISound[] sounds)
     {
-        _pronounce = pronounce;
+        _pronunciation = pronunciation;
         _sounds = sounds;
     }
 
-    public string Make() => string.Join("", _sounds.Select(_pronounce.Make));
+    public string Make() => string.Join("", _sounds.Select(_pronunciation.Make));
 }
