@@ -10,7 +10,10 @@ Composite pattern for Microsoft.Extensions.DependencyInjection
 interface IHofService {}
 class HofService
 {
-    public HofService(IService service) { /* Debug.Assert(service is CompositeService) */}
+    public HofService(IService service)
+    {
+        // Debug.Assert(service is CompositeService)
+    }
 }
 
 class CompositeService : IService
@@ -34,7 +37,10 @@ interface IHofService {}
 
 class HofService
 {
-    public HofService(IComposite<IService> composite) { /* Debug.Assert(composite.Value is CompositeService) */}
+    public HofService(IComposite<IService> composite)
+    {
+        // Debug.Assert(composite.Value is CompositeService)
+    }
 }
 
 class CompositeService : IService
