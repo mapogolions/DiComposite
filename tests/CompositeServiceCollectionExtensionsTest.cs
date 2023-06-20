@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DiComposite.Tests;
 
-public partial class CompositeServiceCollectionExtensionsTests
+public class CompositeServiceCollectionExtensionsTests
 {
     [Theory]
     [InlineData(false, false)]
@@ -28,6 +28,11 @@ public partial class CompositeServiceCollectionExtensionsTests
         Assert.Equal("hello,welcome,howdy", actual);
     }
 
+
+    internal interface IGreeting
+    {
+        string Greet();
+    }
 
     internal class HelloGreeting : IGreeting
     {
