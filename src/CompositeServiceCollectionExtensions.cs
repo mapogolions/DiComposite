@@ -23,6 +23,19 @@ public static class CompositeServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection IComposite<TService, TImplementation>(this IServiceCollection services)
+    {
+        if (services is null) throw new ArgumentNullException(nameof(services));
+        var serviceType = typeof(IComposite<>).MakeGenericType(typeof(TService));
+        services.AddTransient(serviceType, sp =>
+        {
+            var instances = sp.GetRequiredService<IEnumerable<TService>>();
+            var instance = ActivatorUtilities.CreateInstance<TImplementation>(sp, instances)!;
+            return (IComposite<TService>)Activator.CreateInstance(typeof(Composite<TService>), new object[] { instance })!;
+        });
+        return services;
+    }
+
     private static ServiceDescriptor CompositeFactory<TService, TImplementation>(IReadOnlyList<ServiceDescriptor> descriptors)
     {
         var lifetime = descriptors.Max(x => x.Lifetime);
