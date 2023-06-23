@@ -10,20 +10,19 @@ internal class ServiceDescriptorVisitor
         if (descriptor.ImplementationInstance is not null)
         {
             VisitInstance(descriptor, context);
-            return;
         }
-        if (descriptor.ImplementationType is not null)
+        else if (descriptor.ImplementationType is not null)
         {
-            VisitImplementationType(descriptor, context);
-            return;
+            VisitType(descriptor, context);
         }
-        if (descriptor.ImplementationFactory is not null)
+        else if (descriptor.ImplementationFactory is not null)
         {
             VisitFactory(descriptor, context);
-            return;
         }
-        throw new InvalidOperationException();
-
+        else
+        {
+            throw new InvalidOperationException();
+        }
     }
 
     private void VisitInstance(ServiceDescriptor descriptor, ServiceDescriptorVisitorContext context)
@@ -34,7 +33,7 @@ internal class ServiceDescriptorVisitor
         context.Services.Add(new ServiceDescriptor(implementationType, descriptor.ImplementationInstance));
     }
 
-    private void VisitImplementationType(ServiceDescriptor descriptor, ServiceDescriptorVisitorContext context)
+    private void VisitType(ServiceDescriptor descriptor, ServiceDescriptorVisitorContext context)
     {
         Debug.Assert(descriptor.ImplementationType is not null);
         context.Services.Remove(descriptor);
