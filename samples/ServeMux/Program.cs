@@ -13,17 +13,16 @@ internal static class Program
         var services = new ServiceCollection();
         services.AddScoped<IHttpHandler, EchoHandler>();
         services.AddScoped<IHttpHandler, HttpNotFoundHandler>();
-        services.AddScoped<IHttpHandler, GoodbyeHandler>();
         services.Composite<IHttpHandler, ServeMux>();
+        services.AddSingleton<HttpServer>();
 
-        var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions
+        using var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,
             ValidateScopes = true
         });
 
-        using var httpServer = new HttpServer(serviceProvider);
-        Debug.Assert("goodbye" == httpServer.Handle(new HttpRequest { Path = "/goodbye" }));
+        var httpServer = serviceProvider.GetRequiredService<HttpServer>();
         Debug.Assert("foo" == httpServer.Handle(new HttpRequest { Path = "/echo", Body = "foo" }));
         Debug.Assert("404 not found" == httpServer.Handle(new HttpRequest { Path = "/unknown" }));
     }
