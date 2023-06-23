@@ -40,7 +40,7 @@ public static class CompositeServiceCollectionExtensions
     private static ServiceDescriptor CompositeFactory<TService, TImplementation>(IReadOnlyList<ServiceDescriptor> descriptors)
     {
         var lifetime = descriptors.Max(x => x.Lifetime);
-        return new  ServiceDescriptor(typeof(TService), sp =>
+        return new ServiceDescriptor(typeof(TService), sp =>
         {
             var instances = descriptors.Select(x =>
             {
@@ -49,8 +49,7 @@ public static class CompositeServiceCollectionExtensions
                 {
                     return (TService)descriptor.ImplementationFactory(sp);
                 }
-                var concreteType = descriptor.ImplementationInstance is not null ? descriptor.ImplementationInstance.GetType() : descriptor.ImplementationType;
-                if (concreteType is null) throw new InvalidOperationException();
+                var concreteType = descriptor.ImplementationInstance is not null ? descriptor.ImplementationInstance.GetType() : descriptor.ImplementationType!;
                 return (TService)sp.GetRequiredService(concreteType);
             }).ToArray();
             return ActivatorUtilities.CreateInstance<TImplementation>(sp, instances)!;
